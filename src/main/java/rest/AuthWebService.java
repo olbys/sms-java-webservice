@@ -4,9 +4,12 @@ import jpa.api.repositories.RepositoryFactory;
 import jpa.api.repositories.UserRepository;
 import jpa.model.Utilisateur;
 import org.codehaus.jettison.json.JSONObject;
-import utils.security.PasswordUtils;
+import org.mindrot.jbcrypt.BCrypt;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -36,14 +39,14 @@ public class AuthWebService {
         String password = null;
         Collection<Utilisateur> utilisateurs = new ArrayList<>();
         try {
-            password = resource.getString("password");
+            password = resource.getString("password").trim();
             login = resource.getString("login");
             utilisateurs = repository.findByLogin(login);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         for (Utilisateur utilisateur : utilisateurs) {
-            if (isRegisted(utilisateur, password)) {
+            if (isRegisted(password, utilisateur)) {
                 return Response.status(Response.Status.OK)
                         .entity(utilisateur).build();
             }
@@ -53,11 +56,8 @@ public class AuthWebService {
     }
 
 
-    private boolean isRegisted(Utilisateur utilisateur, String passwordprovide) {
-        boolean isRegisted = false;
-        isRegisted = PasswordUtils.verifyUserPassword(
-                passwordprovide, utilisateur.getPassword(), utilisateur.getSalt());
-        return isRegisted;
+    private boolean isRegisted(String passwordsecure, Utilisateur utilisateur) {
+        return BCrypt.checkpw(passwordsecure, utilisateur.getPassword());
     }
 
     private boolean isValid(Utilisateur utilisateur) {

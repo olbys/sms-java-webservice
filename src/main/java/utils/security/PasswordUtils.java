@@ -23,18 +23,6 @@ public class PasswordUtils {
         }
         return new String(returnValue);
     }
-
-
-    public static String getSalt() {
-        StringBuilder returnValue = new StringBuilder(30);
-        for (int i = 0; i < 30; i++) {
-            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
-        }
-        return new String(returnValue);
-    }
-
-
-
     public static byte[] hash(char[] password, byte[] salt) {
         PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
         Arrays.fill(password, Character.MIN_VALUE);
@@ -47,7 +35,6 @@ public class PasswordUtils {
             spec.clearPassword();
         }
     }
-
     public static String generateSecurePassword(String password, String salt) {
         String returnValue = null;
         byte[] securePassword = hash(password.toCharArray(), salt.getBytes());

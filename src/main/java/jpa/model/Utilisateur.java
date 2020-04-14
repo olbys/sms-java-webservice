@@ -1,9 +1,8 @@
 package jpa.model;
 
-import utils.security.PasswordUtils;
+import org.mindrot.jbcrypt.BCrypt;
 
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 
 @Entity
 @PrimaryKeyJoinColumn
@@ -38,12 +37,8 @@ public class Utilisateur extends Personne {
     }
 
     public void setPassword(String password) {
-
-        // Generate Salt. The generated value can be stored in DB.
-        this.salt = PasswordUtils.getSalt();
         // Protect user's password. The generated value can be stored in DB.
-        this.password = PasswordUtils.generateSecurePassword(password, salt);
-
+        this.password = password;
     }
 
     public String getSalt() {
@@ -52,6 +47,12 @@ public class Utilisateur extends Personne {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void hashedPassword(){
+            this.password = BCrypt.hashpw(getPassword(),BCrypt.gensalt());
     }
 
     @Override
