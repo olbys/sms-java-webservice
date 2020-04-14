@@ -1,4 +1,4 @@
-package main.api.api;
+package jpa.api.api;
 
 import java.io.Serializable;
 import java.util.List;

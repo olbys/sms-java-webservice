@@ -1,4 +1,4 @@
-package main.api.api;
+package jpa.api.api;
 
 import jpa.EntityManagerHelper;
 
@@ -13,11 +13,11 @@ import java.util.List;
 public abstract class IGenericDaoImpl<T extends Serializable> implements IGenericDao<T> {
 
     @PersistenceContext
-    private EntityManager manager;
+    protected EntityManager manager;
 
     private Class<T> clazz;
 
-    public IGenericDaoImpl(){
+    public IGenericDaoImpl() {
         manager = EntityManagerHelper.getEntityManager();
         Type t = getClass().getGenericSuperclass();
         ParameterizedType pt = (ParameterizedType) t;
@@ -25,7 +25,7 @@ public abstract class IGenericDaoImpl<T extends Serializable> implements IGeneri
     }
 
 
-    public void save(final T entity){
+    public void save(final T entity) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
         manager.persist(entity);
@@ -36,14 +36,17 @@ public abstract class IGenericDaoImpl<T extends Serializable> implements IGeneri
     public List<T> findAll() {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-        return manager.createQuery( "from " + clazz.getName() )
+
+        List<T> list = manager.createQuery("from " + clazz.getName())
                 .getResultList();
+        transaction.commit();
+        return list;
     }
 
     public void remove(T entity) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-        manager.remove(entity);
+        manager.remove(manager.merge(entity));
         transaction.commit();
     }
 
@@ -61,6 +64,10 @@ public abstract class IGenericDaoImpl<T extends Serializable> implements IGeneri
         T entityT = manager.find(clazz, id);
         transaction.commit();
         return entityT;
+    }
+
+    public Class<T> getClazz() {
+        return clazz;
     }
 
 }

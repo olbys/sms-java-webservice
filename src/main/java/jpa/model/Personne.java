@@ -1,4 +1,4 @@
-package main.model;
+package jpa.model;
 
 import javax.persistence.*;
 import java.io.Serializable;

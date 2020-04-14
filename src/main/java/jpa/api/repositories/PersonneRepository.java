@@ -1,7 +1,7 @@
-package main.api.repositories;
+package jpa.api.repositories;
 
-import main.model.Personne;
-import main.api.api.IGenericDaoImpl;
+import jpa.model.Personne;
+import jpa.api.api.IGenericDaoImpl;
 
 public class PersonneRepository extends IGenericDaoImpl<Personne> {
 }

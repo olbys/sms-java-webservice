@@ -1,4 +1,4 @@
-package main.model;
+package jpa.model;
 
 import utils.security.PasswordUtils;
 
@@ -62,4 +62,6 @@ public class Utilisateur extends Personne {
                 ", salt='" + salt + '\'' +
                 '}';
     }
+
+
 }
