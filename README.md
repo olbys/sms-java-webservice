@@ -1,1 +1,1 @@
-# Template de projet pour le TP JPA 2019 UniR
+PROJET JAVA INTEGRANT JPA, JAXRS ET JERSEY POUR 
